@@ -35,10 +35,10 @@
 }
 
 @media only screen and (max-width: var(--bp-medium)) {
-  .search {
+  .search__field {
     width: auto;
   }
-  .search__field::placeholder {
+  .search__field a::placeholder {
     color: white;
   }
 }

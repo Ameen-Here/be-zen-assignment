@@ -45,7 +45,7 @@ html {
   box-sizing: border-box;
   font-size: 62.5%;
 
-  @media only screen and (max-width: $bp-medium) {
+  @media only screen and (max-width: var(--bp-medium)) {
     font-size: 50%;
   }
 }
@@ -76,8 +76,10 @@ body {
   grid-template-areas:
     "head head"
     "list recipe";
+}
 
-  @media only screen and (max-width: $bp-large) {
+@media only screen and (max-width: var(--bp-large)) {
+  .container {
     max-width: 100%;
     margin: 0;
     border-radius: 0;
@@ -296,7 +298,7 @@ body {
 }
 
 .message svg,
-.message svg {
+.error svg {
   height: 3rem;
   width: 3rem;
   fill: var(--color-primary);
