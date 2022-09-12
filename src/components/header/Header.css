@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Ms+Madi&display=swap");
+
+.header {
+  grid-area: head;
+  background-color: var(--color-grey-light-1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__logo {
+  font-family: "Ms Madi", cursive;
+  margin-left: 4rem;
+  height: 4.6rem;
+  display: block;
+  font-size: 30px;
+}
