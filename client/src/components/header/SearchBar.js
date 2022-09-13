@@ -7,10 +7,14 @@ import { resultActions } from "../../store";
 
 const SearchBar = () => {
   const inpRef = useRef();
+
   const dispatch = useDispatch();
   const searchActions = resultActions;
-  const searchData = (e) => {
+  const searchData = async (e) => {
     e.preventDefault();
+    const data = await fetch("/api/hello");
+    const datas = await data.json();
+    console.log(datas);
     dispatch(searchActions.search(inpRef.current.value));
   };
   return (
