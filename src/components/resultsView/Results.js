@@ -2,15 +2,27 @@ import React from "react";
 
 import "./Results.css";
 
-import { useSelector } from "react-redux/es/exports";
+import { useDispatch, useSelector } from "react-redux/es/exports";
+import { recipeAction } from "../../store";
 
 const Results = () => {
-  const TRIAL_DATA = useSelector((state) => state.recipe.recipeData);
+  const dispatch = useDispatch();
+  const recipeDispatch = recipeAction;
+  const TRIAL_DATA = useSelector((state) => state.result.resultData);
   return (
     <ul className="results">
       {TRIAL_DATA.map((val) => (
         <li key={val.id} className="preview">
-          <a className="preview__link preview__link--active" href="#23456">
+          <a
+            className="preview__link preview__link--active"
+            href="#"
+            onClick={() => {
+              dispatch(recipeDispatch.load());
+              setTimeout(() => {
+                dispatch(recipeDispatch.showItem(val.id));
+              }, 1000);
+            }}
+          >
             <figure className="preview__fig">
               <img src={val.img} alt="Test" />
             </figure>
