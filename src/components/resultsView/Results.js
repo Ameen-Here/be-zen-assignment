@@ -11,33 +11,35 @@ const Results = () => {
   const TRIAL_DATA = useSelector((state) => state.result.resultData);
   return (
     <ul className="results">
-      {TRIAL_DATA.map((val) => (
-        <li key={val.id} className="preview">
-          <a
-            className="preview__link preview__link--active"
-            href="#"
-            onClick={() => {
-              dispatch(recipeDispatch.load());
-              setTimeout(() => {
-                dispatch(recipeDispatch.showItem(val.id));
-              }, 1000);
-            }}
-          >
-            <figure className="preview__fig">
-              <img src={val.img} alt="Test" />
-            </figure>
-            <div className="preview__data">
-              <h4 className="preview__title">{val.title}</h4>
-              <p className="preview__publisher">{val.publisher}</p>
-              <div className="preview__user-generated">
-                <svg>
-                  <use href="src/img/icons.svg#icon-user"></use>
-                </svg>
+      {TRIAL_DATA === "" && <li>No items found</li>}
+      {TRIAL_DATA !== "" &&
+        TRIAL_DATA.map((val) => (
+          <li key={val.id} className="preview">
+            <a
+              className="preview__link preview__link--active"
+              href="#"
+              onClick={() => {
+                dispatch(recipeDispatch.load());
+                setTimeout(() => {
+                  dispatch(recipeDispatch.showItem(val.id));
+                }, 1000);
+              }}
+            >
+              <figure className="preview__fig">
+                <img src={val.img} alt="Test" />
+              </figure>
+              <div className="preview__data">
+                <h4 className="preview__title">{val.title}</h4>
+                <p className="preview__publisher">{val.publisher}</p>
+                <div className="preview__user-generated">
+                  <svg>
+                    <use href="src/img/icons.svg#icon-user"></use>
+                  </svg>
+                </div>
               </div>
-            </div>
-          </a>
-        </li>
-      ))}
+            </a>
+          </li>
+        ))}
     </ul>
   );
 };

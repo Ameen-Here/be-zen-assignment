@@ -8,7 +8,31 @@ const initialState = { resultData: TRIAL_DATA };
 const resultSlice = createSlice({
   name: "result",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    search(state, action) {
+      if (action.payload.trim() === "") {
+        state.resultData = TRIAL_DATA;
+      } else {
+        const value = TRIAL_DATA.filter((data) => {
+          //   console.log();
+          return (
+            data.title.toLowerCase().startsWith(action.payload.toLowerCase()) ||
+            data.ingredients.filter((datas) => {
+              return datas.ingredient
+                .toLowerCase()
+                .startsWith(action.payload.toLowerCase());
+            }).length > 0
+          );
+        });
+        console.log(value);
+        if (value.length > 0) {
+          state.resultData = value;
+        } else {
+          state.resultData = "";
+        }
+      }
+    },
+  },
 });
 
 const recipeSlice = createSlice({

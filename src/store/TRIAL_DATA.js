@@ -44,7 +44,7 @@ export const TRIAL_DATA = [
     serving: 4,
     ingredients: [
       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-      { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
+      { qty: 0.5, unit: "cup", ingredient: "Icecream" },
     ],
     id: 4,
   },
@@ -80,7 +80,7 @@ export const TRIAL_DATA = [
     serving: 4,
     ingredients: [
       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-      { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
+      { qty: 0.5, unit: "cup", ingredient: "Icecream" },
     ],
     id: 7,
   },
