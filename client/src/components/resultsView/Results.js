@@ -9,6 +9,7 @@ const Results = () => {
   const dispatch = useDispatch();
   const recipeDispatch = recipeAction;
   const TRIAL_DATA = useSelector((state) => state.result.resultData);
+  const recipeDatas = useSelector((state) => state.data.datas);
   return (
     <ul className="results">
       {TRIAL_DATA === "" && <li>No items found</li>}
@@ -21,7 +22,9 @@ const Results = () => {
               onClick={() => {
                 dispatch(recipeDispatch.load());
                 setTimeout(() => {
-                  dispatch(recipeDispatch.showItem(val.id));
+                  dispatch(
+                    recipeDispatch.showItem({ id: val.id, datas: recipeDatas })
+                  );
                 }, 1000);
               }}
             >

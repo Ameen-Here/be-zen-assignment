@@ -3,24 +3,39 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import { TRIAL_DATA } from "./TRIAL_DATA";
 
-const initialState = { resultData: TRIAL_DATA };
+const initialState = { resultData: "" };
+
+const dataSlice = createSlice({
+  name: "data",
+  initialState: { datas: "" },
+  reducers: {
+    addValue(state, action) {
+      state.datas = action.payload;
+    },
+  },
+});
 
 const resultSlice = createSlice({
   name: "result",
   initialState: initialState,
   reducers: {
+    updateData(state, action) {
+      state.resultData = action.payload;
+    },
     search(state, action) {
-      if (action.payload.trim() === "") {
-        state.resultData = TRIAL_DATA;
+      if (action.payload.word.trim() === "") {
+        state.resultData = action.payload.datas;
       } else {
-        const value = TRIAL_DATA.filter((data) => {
+        const value = action.payload.datas.filter((data) => {
           //   console.log();
           return (
-            data.title.toLowerCase().startsWith(action.payload.toLowerCase()) ||
+            data.title
+              .toLowerCase()
+              .startsWith(action.payload.word.toLowerCase()) ||
             data.ingredients.filter((datas) => {
               return datas.ingredient
                 .toLowerCase()
-                .startsWith(action.payload.toLowerCase());
+                .startsWith(action.payload.word.toLowerCase());
             }).length > 0
           );
         });
@@ -43,7 +58,9 @@ const recipeSlice = createSlice({
       state.recipeData = "loading";
     },
     showItem(state, action) {
-      state.recipeData = TRIAL_DATA.find((data) => data.id === action.payload);
+      state.recipeData = action.payload.datas.find(
+        (data) => data.id === action.payload.id
+      );
     },
   },
 });
@@ -52,10 +69,13 @@ export const recipeAction = recipeSlice.actions;
 
 export const resultActions = resultSlice.actions;
 
+export const dataActions = dataSlice.actions;
+
 const store = configureStore({
   reducer: {
     result: resultSlice.reducer,
     recipe: recipeSlice.reducer,
+    data: dataSlice.reducer,
   },
   // reducer:recipeSlice.reducer
 });

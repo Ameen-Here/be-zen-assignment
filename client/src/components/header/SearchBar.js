@@ -2,20 +2,21 @@ import React, { useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 
 import "./SearchBar.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resultActions } from "../../store";
 
 const SearchBar = () => {
+  const recipeData = useSelector((state) => state.data.datas);
   const inpRef = useRef();
 
   const dispatch = useDispatch();
   const searchActions = resultActions;
   const searchData = async (e) => {
     e.preventDefault();
-    const data = await fetch("/api/hello");
-    const datas = await data.json();
-    console.log(datas);
-    dispatch(searchActions.search(inpRef.current.value));
+
+    dispatch(
+      searchActions.search({ word: inpRef.current.value, datas: recipeData })
+    );
   };
   return (
     <form className="search" onSubmit={searchData}>
