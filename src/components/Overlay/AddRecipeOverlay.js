@@ -3,7 +3,7 @@ import "./AddRecipe.css";
 
 const AddRecipeOverlay = () => {
   return (
-    <div className="overlay">
+    <div className="overlay hidden">
       <div className="add-recipe-window ">
         <button className="btn--close-modal">&times;</button>
         <form className="upload">
