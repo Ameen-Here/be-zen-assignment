@@ -62,7 +62,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/v1/fakeLogin", async (req, res) => {
   try {
     const user = new User({
-      username: "armieneun123456",
+      username: "armieneun12345678",
     });
     const newUser = await User.register(user, "fakePassword");
     req.login(newUser, (err) => {
@@ -77,7 +77,7 @@ app.get("/v1/fakeLogin", async (req, res) => {
 });
 
 app.get("/v1/fakeCheck", isLoggedIn, (req, res) => {
-  res.send({ status: "Logged In" });
+  res.send({ status: "Logged In", userName: req.user.username });
 });
 
 app.get("/v1/getData", async (req, res) => {
