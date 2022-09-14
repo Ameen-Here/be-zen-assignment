@@ -62,15 +62,15 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/v1/fakeLogin", async (req, res) => {
   try {
     const user = new User({
-      username: "armieneun1234",
+      username: "armieneun123456",
     });
     const newUser = await User.register(user, "fakePassword");
-    // req.login(newUser, (err) => {
-    //   if (err) {
-    //     return next(err);
-    //   }
-    // });
-    res.send({ status: "Logged In" });
+    req.login(newUser, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.send({ status: "Logged In" });
+    });
   } catch (e) {
     res.send({ status: e.message });
   }
