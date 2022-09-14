@@ -8,20 +8,22 @@ import ResultsView from "./components/resultsView/ResultsView";
 
 import { useDispatch } from "react-redux";
 
-import { dataActions, resultActions } from "./store/index";
+import { currentUserAction, dataActions, resultActions } from "./store/index";
 import LoginOverlay from "./components/Overlay/LoginSignup";
 
 function App() {
   const dispatch = useDispatch();
   const actions = dataActions;
   const resultAction = resultActions;
+  const userAction = currentUserAction;
   useEffect(async () => {
     const data = await fetch("/v1/getData");
     const datas = await data.json();
-    console.log(datas);
-    dispatch(actions.addValue(datas));
-    dispatch(resultAction.updateData(datas));
-    console.log("done");
+    dispatch(
+      currentUserAction.updateUser(datas.username ? datas.username : "")
+    );
+    dispatch(actions.addValue(datas.datas));
+    dispatch(resultAction.updateData(datas.datas));
   }, []);
 
   return (
