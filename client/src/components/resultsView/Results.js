@@ -20,9 +20,6 @@ const Results = () => {
               className="preview__link preview__link--active"
               href="#"
               onClick={async () => {
-                const data = await fetch("/v1/fakeCheck");
-                const datas = await data.json();
-                console.log(datas);
                 dispatch(recipeDispatch.load());
                 setTimeout(() => {
                   dispatch(
