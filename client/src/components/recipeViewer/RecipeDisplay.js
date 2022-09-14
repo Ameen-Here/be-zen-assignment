@@ -55,7 +55,14 @@ const RecipeDisplay = (props) => {
       </div>
       <div className="recipe__directions">
         <h2 className="heading--2">How to cook it</h2>
-        <p className="recipe__directions-text">
+        <ol>
+          <li className="recipe__directions-text">Chop the onions</li>
+          <li className="recipe__directions-text">Boil the water</li>
+          <li className="recipe__directions-text">
+            @ minutes noodles is ready
+          </li>
+        </ol>
+        {/* <p className="recipe__directions-text">
           This recipe was carefully designed and tested by
           <span className="recipe__publisher">{props.trialData.publisher}</span>
           . Instuction will be added soon.
@@ -69,7 +76,7 @@ const RecipeDisplay = (props) => {
             <ArrowRightAlt />
           </svg>
           <span>Directions</span>
-        </a>
+        </a> */}
       </div>
     </>
   );

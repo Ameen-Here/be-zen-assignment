@@ -20,24 +20,22 @@ const AddRecipeOverlay = () => {
           <div className="upload__column">
             <h3 className="upload__heading">Recipe data</h3>
             <label>Title</label>
-            <input value="TEST" required name="title" type="text" />
-            <label>URL</label>
-            <input value="TEST" required name="sourceUrl" type="text" />
+            <input required name="title" type="text" />
             <label>Image URL</label>
-            <input value="TEST" required name="image" type="text" />
-            <label>Publisher</label>
-            <input value="TEST" required name="publisher" type="text" />
+            <input required name="image" type="text" />
+
             <label>Prep time</label>
-            <input value="23" required name="cookingTime" type="number" />
+            <input required name="cookingTime" type="number" />
             <label>Servings</label>
-            <input value="23" required name="servings" type="number" />
+            <input placeholder="In Minutes" required type="number" />
+            <label>Instruction(comma seperated)</label>
+            <input required placeholder="method-1,method-2,..." type="text" />
           </div>
 
           <div className="upload__column">
             <h3 className="upload__heading">Ingredients</h3>
             <label>Ingredient 1</label>
             <input
-              value="0.5,kg,Rice"
               type="text"
               required
               name="ingredient-1"
@@ -45,14 +43,12 @@ const AddRecipeOverlay = () => {
             />
             <label>Ingredient 2</label>
             <input
-              value="1,,Avocado"
               type="text"
               name="ingredient-2"
               placeholder="Format: 'Quantity,Unit,Description'"
             />
             <label>Ingredient 3</label>
             <input
-              value=",,salt"
               type="text"
               name="ingredient-3"
               placeholder="Format: 'Quantity,Unit,Description'"
