@@ -85,4 +85,22 @@ app.get("/v1/getData", async (req, res) => {
   res.send(datas);
 });
 
+app.post("/v1/register", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const user = new User({
+      username,
+    });
+    const newUser = await User.register(user, password);
+    req.login(newUser, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.send({ message: "Logged In", username: username });
+    });
+  } catch (e) {
+    res.send({ message: e.message });
+  }
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
