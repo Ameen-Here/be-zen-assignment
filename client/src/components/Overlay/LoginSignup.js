@@ -1,7 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginOverlayActions } from "../../store";
+import { currentUserAction, loginOverlayActions } from "../../store";
 import "./AddRecipe.css";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useRef } from "react";
 
@@ -11,6 +14,10 @@ import AddIcon from "@mui/icons-material/Add";
 const LoginOverlay = () => {
   const usernameInpRef = useRef();
   const passwordInpRef = useRef();
+
+  const dispatch = useDispatch();
+  const action = loginOverlayActions;
+  const userAction = currentUserAction;
 
   const formSubmit = (e) => {
     e.preventDefault();
@@ -34,50 +41,81 @@ const LoginOverlay = () => {
     });
 
     const datas = await data.json();
-    console.log(datas);
+    if (datas.error) {
+      toast.error(datas.message, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      toast.success(datas.message, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(userAction.updateUser(datas.username));
+      dispatch(action.updateClass("overlay hidden"));
+    }
   };
-  const dispatch = useDispatch();
-  const action = loginOverlayActions;
+
   const closeOverlayHandler = () => {
     dispatch(action.updateClass("overlay hidden"));
   };
   const className = useSelector((state) => state.loginOverlay.className);
+
   return (
-    <div className={className}>
-      <div className="add-recipe-window ">
-        <button className="btn--close-modal" onClick={closeOverlayHandler}>
-          &times;
-        </button>
-        <form className="upload" onSubmit={formSubmit}>
-          <div className="upload__column">
-            <h3 className="upload__heading">Login Data</h3>
-            <label>Username</label>
-            <input ref={usernameInpRef} required name="username" type="text" />
-            <label>Password</label>
-            <input
-              ref={passwordInpRef}
-              required
-              name="password"
-              type="password"
-            />
-          </div>
-          <div className="upload__column">
-            <button className="btn upload__btn" onClick={signUpHandler}>
-              <svg>
-                <AddIcon />
-              </svg>
-              <span>Signup</span>
-            </button>
-            <button className="btn upload__btn">
-              <svg>
-                <LoginIcon />
-              </svg>
-              <span>Login</span>
-            </button>
-          </div>
-        </form>
+    <>
+      <ToastContainer />
+      <div className={className}>
+        <div className="add-recipe-window ">
+          <button className="btn--close-modal" onClick={closeOverlayHandler}>
+            &times;
+          </button>
+
+          <form className="upload" onSubmit={formSubmit}>
+            <div className="upload__column">
+              <h3 className="upload__heading">Login Data</h3>
+              <label>Username</label>
+              <input
+                ref={usernameInpRef}
+                required
+                name="username"
+                type="text"
+              />
+              <label>Password</label>
+              <input
+                ref={passwordInpRef}
+                required
+                name="password"
+                type="password"
+              />
+            </div>
+            <div className="upload__column">
+              <button className="btn upload__btn" onClick={signUpHandler}>
+                <svg>
+                  <AddIcon />
+                </svg>
+                <span>Signup</span>
+              </button>
+              <button className="btn upload__btn">
+                <svg>
+                  <LoginIcon />
+                </svg>
+                <span>Login</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

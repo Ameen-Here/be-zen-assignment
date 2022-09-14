@@ -85,6 +85,16 @@ const recipeSlice = createSlice({
   },
 });
 
+const currentUserSlice = createSlice({
+  name: "currentUser",
+  initialState: { currentUser: "" },
+  reducers: {
+    updateUser(state, action) {
+      state.currentUser = action.payload;
+    },
+  },
+});
+
 export const recipeAction = recipeSlice.actions;
 
 export const resultActions = resultSlice.actions;
@@ -95,6 +105,8 @@ export const recipeOverlayAction = addRecipeOverlaySlice.actions;
 
 export const loginOverlayActions = loginOverlaySlice.actions;
 
+export const currentUserAction = currentUserSlice.actions;
+
 const store = configureStore({
   reducer: {
     result: resultSlice.reducer,
@@ -102,6 +114,7 @@ const store = configureStore({
     data: dataSlice.reducer,
     recipeOverlay: addRecipeOverlaySlice.reducer,
     loginOverlay: loginOverlaySlice.reducer,
+    currentUser: currentUserSlice.reducer,
   },
   // reducer:recipeSlice.reducer
 });
