@@ -1,11 +1,21 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { recipeOverlayAction } from "../../store";
 import "./AddRecipe.css";
 
 const AddRecipeOverlay = () => {
+  const dispatch = useDispatch();
+  const action = recipeOverlayAction;
+  const closeOverlayHandler = () => {
+    dispatch(action.updateClass("overlay hidden"));
+  };
+  const className = useSelector((state) => state.recipeOverlay.className);
   return (
-    <div className="overlay hidden">
+    <div className={className}>
       <div className="add-recipe-window ">
-        <button className="btn--close-modal">&times;</button>
+        <button className="btn--close-modal" onClick={closeOverlayHandler}>
+          &times;
+        </button>
         <form className="upload">
           <div className="upload__column">
             <h3 className="upload__heading">Recipe data</h3>
