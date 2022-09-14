@@ -25,6 +25,16 @@ const addRecipeOverlaySlice = createSlice({
   },
 });
 
+const loginOverlaySlice = createSlice({
+  name: "loginOverlay",
+  initialState: { className: "overlay hidden" },
+  reducers: {
+    updateClass(state, action) {
+      state.className = action.payload;
+    },
+  },
+});
+
 const resultSlice = createSlice({
   name: "result",
   initialState: initialState,
@@ -83,12 +93,15 @@ export const dataActions = dataSlice.actions;
 
 export const recipeOverlayAction = addRecipeOverlaySlice.actions;
 
+export const loginOverlayActions = loginOverlaySlice.actions;
+
 const store = configureStore({
   reducer: {
     result: resultSlice.reducer,
     recipe: recipeSlice.reducer,
     data: dataSlice.reducer,
     recipeOverlay: addRecipeOverlaySlice.reducer,
+    loginOverlay: loginOverlaySlice.reducer,
   },
   // reducer:recipeSlice.reducer
 });

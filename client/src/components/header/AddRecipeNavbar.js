@@ -1,18 +1,21 @@
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 import "./AddRecipeNavbar.css";
 import { useDispatch } from "react-redux";
-import { recipeOverlayAction } from "../../store";
+import { loginOverlayActions, recipeOverlayAction } from "../../store";
 
 const AddRecipeNavbar = () => {
   const dispatch = useDispatch();
-  const action = recipeOverlayAction;
+  const recipeAction = recipeOverlayAction;
+  const loginAction = loginOverlayActions;
   const addRecipeOverlayHandler = async () => {
-    const data = await fetch("/v1/fakeLogin");
-    const datas = await data.json();
-    console.log(datas);
-    dispatch(recipeOverlayAction.updateClass("overlay"));
+    dispatch(recipeAction.updateClass("overlay"));
+  };
+
+  const loginOverlayHandler = async () => {
+    dispatch(loginAction.updateClass("overlay"));
   };
   return (
     <nav className="nav">
@@ -26,6 +29,17 @@ const AddRecipeNavbar = () => {
               <AddIcon />
             </svg>
             <span>Add recipe</span>
+          </button>
+        </li>
+        <li className="nav__item">
+          <button
+            className="nav__btn nav__btn--add-recipe"
+            onClick={loginOverlayHandler}
+          >
+            <svg className="nav__icon">
+              <PersonAddIcon />
+            </svg>
+            <span>Login/Signup</span>
           </button>
         </li>
       </ul>

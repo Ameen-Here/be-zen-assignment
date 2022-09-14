@@ -9,6 +9,7 @@ import ResultsView from "./components/resultsView/ResultsView";
 import { useDispatch } from "react-redux";
 
 import { dataActions, resultActions } from "./store/index";
+import LoginOverlay from "./components/Overlay/LoginSignup";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ function App() {
         <RecipeViewer />
       </div>
       <AddRecipeOverlay />
+      <LoginOverlay />
     </>
   );
 }
