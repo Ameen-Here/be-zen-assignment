@@ -5,6 +5,9 @@ const app = express();
 const User = require("./models/user.js");
 const Recipe = require("./models/recipe.js");
 
+// Middleware
+const { isLoggedIn } = require("./middleware.js");
+
 // Export mongoose
 const mongoose = require("mongoose");
 
@@ -57,11 +60,24 @@ app.use(express.urlencoded({ extended: true }));
 // Demo passport route
 
 app.get("/v1/fakeLogin", async (req, res) => {
-  const user = new User({
-    username: "armieneun",
-  });
-  const newUser = await User.register(user, "fakePassword");
-  res.send(newUser);
+  try {
+    const user = new User({
+      username: "armieneun1234",
+    });
+    const newUser = await User.register(user, "fakePassword");
+    // req.login(newUser, (err) => {
+    //   if (err) {
+    //     return next(err);
+    //   }
+    // });
+    res.send({ status: "Logged In" });
+  } catch (e) {
+    res.send({ status: e.message });
+  }
+});
+
+app.get("/v1/fakeCheck", isLoggedIn, (req, res) => {
+  res.send({ status: "Logged In" });
 });
 
 app.get("/v1/getData", async (req, res) => {
