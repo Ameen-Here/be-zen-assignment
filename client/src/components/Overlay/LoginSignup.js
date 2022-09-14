@@ -23,6 +23,48 @@ const LoginOverlay = () => {
     e.preventDefault();
   };
 
+  const loginHandler = async () => {
+    const username = usernameInpRef.current.value;
+    const password = passwordInpRef.current.value;
+
+    const data = await fetch("/v1/login", {
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+
+      // Adding headers to the request
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    if (data.status === 401) {
+      toast.error("Incorrect username or password", {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      const datas = await data.json();
+      toast.success("Logged in", {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(userAction.updateUser(datas.username));
+      dispatch(action.updateClass("overlay hidden"));
+    }
+  };
+
   const signUpHandler = async () => {
     const username = usernameInpRef.current.value;
     const password = passwordInpRef.current.value;
@@ -105,7 +147,7 @@ const LoginOverlay = () => {
                 </svg>
                 <span>Signup</span>
               </button>
-              <button className="btn upload__btn">
+              <button className="btn upload__btn" onClick={loginHandler}>
                 <svg>
                   <LoginIcon />
                 </svg>
