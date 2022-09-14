@@ -2,9 +2,40 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 
+const User = require("./models/user.js");
+const Recipe = require("./models/recipe.js");
+
+// Export mongoose
 const mongoose = require("mongoose");
 
+// Export sessiom
+const session = require("express-session");
+
 const { Schema } = mongoose;
+
+// Export passport and dependencies
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+
+const sessionConfig = {
+  secret: "thisisasecretkey",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  },
+};
+
+// Passport
+app.use(session(sessionConfig));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Connecting Mongoose to mongo
 
@@ -18,150 +49,20 @@ mongoose
 
 mongoose.connection.on("error", (err) => logError(err));
 
-// Mongo DB Schema
-const recipeSchema = new Schema({
-  title: String, // String is shorthand for {type: String}
-  img: String,
-  time: Number,
-  serving: Number,
-  ingredients: [Schema.Types.Mixed],
-  id: Number,
-});
-
-const Recipe = mongoose.model("Recipe", recipeSchema);
-
-// Adding biriyani to the mongoose database.
-
-// const biriyani = new Recipe({
-//   title: "Yummy Hyderbadi Biriyani",
-//   img: "https://4.bp.blogspot.com/-VAz98JXZW6A/Ww6SuhI9uII/AAAAAAAAAho/9phhquy1fYQ5JegCkbR49l9lqpPgElY9wCK4BGAYYCw/s1600/Hyderabadi%2Bbiryan.jpg",
-//   publisher: "Chef Pillai",
-//   time: 45, // In Min
-//   serving: 4,
-//   ingredients: [
-//     { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//     { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//   ],
-//   id: 1,
-// });
-
-// biriyani.save();
-
-// Recipe.insertMany([
-//   {
-//     title: "Yummy Hyderbadi Biriyanii",
-//     img: "https://4.bp.blogspot.com/-VAz98JXZW6A/Ww6SuhI9uII/AAAAAAAAAho/9phhquy1fYQ5JegCkbR49l9lqpPgElY9wCK4BGAYYCw/s1600/Hyderabadi%2Bbiryan.jpg",
-//     publisher: "Chef Pillai",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 1,
-//   },
-//   {
-//     title: "2 min Maggi noodles",
-//     img: "https://tse2.mm.bing.net/th?id=OIP.TrHlR5V88SQHciAP7pPRVgHaDt&pid=Api&P=0",
-//     publisher: "Raghav",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 2,
-//   },
-//   {
-//     title: "Healthy Veg Pulao",
-//     img: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/garimasgautam-gmail.com/Nepalese_Veg_Pulao.jpg",
-//     publisher: "Devika Rai",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 3,
-//   },
-//   {
-//     title: "Royal Falooda",
-//     img: "https://cookingfromheart.com/wp-content/uploads/2022/04/Royal-Falooda-3.jpg",
-//     publisher: "Annonymous",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Icecream" },
-//     ],
-//     id: 4,
-//   },
-//   {
-//     title: "Paneer Butter Masala",
-//     img: "https://www.ruchiskitchen.com/wp-content/uploads/2020/12/Paneer-butter-masala-recipe-3-500x375.jpg",
-//     publisher: "Roshan Andrews",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 5,
-//   },
-//   {
-//     title: "Healthy Veg Pulao",
-//     img: "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/garimasgautam-gmail.com/Nepalese_Veg_Pulao.jpg",
-//     publisher: "Devika Rai",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 6,
-//   },
-//   {
-//     title: "Royal Falooda",
-//     img: "https://cookingfromheart.com/wp-content/uploads/2022/04/Royal-Falooda-3.jpg",
-//     publisher: "Annonymous",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Icecream" },
-//     ],
-//     id: 7,
-//   },
-//   {
-//     title: "Paneer Butter Masala",
-//     img: "https://www.ruchiskitchen.com/wp-content/uploads/2020/12/Paneer-butter-masala-recipe-3-500x375.jpg",
-//     publisher: "Roshan Andrews",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 8,
-//   },
-//   {
-//     title: "Yummy Hyderbadi Biriyani",
-//     img: "https://4.bp.blogspot.com/-VAz98JXZW6A/Ww6SuhI9uII/AAAAAAAAAho/9phhquy1fYQ5JegCkbR49l9lqpPgElY9wCK4BGAYYCw/s1600/Hyderabadi%2Bbiryan.jpg",
-//     publisher: "Chef Pillai",
-//     time: 45, // In Min
-//     serving: 4,
-//     ingredients: [
-//       { qty: 1000, unit: "g", ingredient: "Biriyani Rice" },
-//       { qty: 0.5, unit: "cup", ingredient: "Biriyani Masala" },
-//     ],
-//     id: 9,
-//   },
-// ]);
-
 const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Demo passport route
+
+app.get("/v1/fakeLogin", async (req, res) => {
+  const user = new User({
+    username: "armieneun",
+  });
+  const newUser = await User.register(user, "fakePassword");
+  res.send(newUser);
+});
 
 app.get("/v1/getData", async (req, res) => {
   const datas = await Recipe.find({});

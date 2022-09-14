@@ -25,7 +25,7 @@ const Results = () => {
                   dispatch(
                     recipeDispatch.showItem({ id: val.id, datas: recipeDatas })
                   );
-                }, 1000);
+                }, 500);
               }}
             >
               <figure className="preview__fig">

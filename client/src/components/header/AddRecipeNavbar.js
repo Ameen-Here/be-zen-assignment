@@ -8,7 +8,10 @@ import { recipeOverlayAction } from "../../store";
 const AddRecipeNavbar = () => {
   const dispatch = useDispatch();
   const action = recipeOverlayAction;
-  const addRecipeOverlayHandler = () => {
+  const addRecipeOverlayHandler = async () => {
+    const data = await fetch("/v1/fakeLogin");
+    const datas = await data.json();
+    console.log(datas);
     dispatch(recipeOverlayAction.updateClass("overlay"));
   };
   return (
