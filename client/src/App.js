@@ -14,17 +14,21 @@ import UpdateRecipeOverlay from "./components/Overlay/updateOverlay";
 
 function App() {
   const dispatch = useDispatch();
+  // Actions from redux store
   const actions = dataActions;
   const resultAction = resultActions;
   const userAction = currentUserAction;
-  useEffect(async () => {
-    const data = await fetch("/v1/getData");
-    const datas = await data.json();
-    dispatch(
-      currentUserAction.updateUser(datas.username ? datas.username : "")
-    );
-    dispatch(actions.addValue(datas.datas));
-    dispatch(resultAction.updateData(datas.datas));
+
+  // For getting data when site is loaded
+  useEffect(() => {
+    const callData = async () => {
+      const data = await fetch("/v1/getData");
+      const datas = await data.json();
+      dispatch(userAction.updateUser(datas.username ? datas.username : ""));
+      dispatch(actions.addValue(datas.datas));
+      dispatch(resultAction.updateData(datas.datas));
+    };
+    callData();
   }, []);
 
   return (

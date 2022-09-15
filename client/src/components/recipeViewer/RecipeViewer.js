@@ -1,6 +1,5 @@
 import React from "react";
 import EmptyRecipe from "./EmptyRecipe";
-import ErrorMessage from "./ErrorMessage";
 import RecipeDisplay from "./RecipeDisplay";
 
 import { useSelector } from "react-redux/es/exports";

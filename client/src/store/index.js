@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
 
-import { TRIAL_DATA } from "./TRIAL_DATA";
-
-const initialState = { resultData: "" };
-
+// For storing all the recipe datas
 const dataSlice = createSlice({
   name: "data",
   initialState: { datas: "" },
   reducers: {
+    // While data updated, or added
     addValue(state, action) {
       state.datas = action.payload;
     },
   },
 });
 
+// Overlays
+// For adding recipe overlay,
 const addRecipeOverlaySlice = createSlice({
   name: "recipeOverlay",
   initialState: { className: "overlay hidden" },
@@ -25,6 +25,7 @@ const addRecipeOverlaySlice = createSlice({
   },
 });
 
+// For update recipe overlay
 const updateOverlaySlice = createSlice({
   name: "updateOverlay",
   initialState: { className: "overlay hidden" },
@@ -35,6 +36,7 @@ const updateOverlaySlice = createSlice({
   },
 });
 
+// For login/register overlay
 const loginOverlaySlice = createSlice({
   name: "loginOverlay",
   initialState: { className: "overlay hidden" },
@@ -45,19 +47,22 @@ const loginOverlaySlice = createSlice({
   },
 });
 
+// Result and recipe display
+
+// For recipe results
 const resultSlice = createSlice({
   name: "result",
-  initialState: initialState,
+  initialState: { resultData: "" },
   reducers: {
     updateData(state, action) {
       state.resultData = action.payload;
     },
     search(state, action) {
+      // For search feature
       if (action.payload.word.trim() === "") {
         state.resultData = action.payload.datas;
       } else {
         const value = action.payload.datas.filter((data) => {
-          //   console.log();
           return (
             data.title
               .toLowerCase()
@@ -69,7 +74,6 @@ const resultSlice = createSlice({
             }).length > 0
           );
         });
-        console.log(value);
         if (value.length > 0) {
           state.resultData = value;
         } else {
@@ -80,6 +84,7 @@ const resultSlice = createSlice({
   },
 });
 
+// For recipe to display
 const recipeSlice = createSlice({
   name: "recipe",
   initialState: { recipeData: "" },
@@ -98,6 +103,7 @@ const recipeSlice = createSlice({
   },
 });
 
+// For preseving current user
 const currentUserSlice = createSlice({
   name: "currentUser",
   initialState: { currentUser: "" },

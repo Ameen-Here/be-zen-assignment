@@ -17,9 +17,7 @@ import {
 } from "../../store";
 
 const UpdateRecipeOverlay = () => {
-  // For adding current values
-  const recipeData = useSelector((state) => state.recipe.recipeData);
-
+  // Actions from redux store
   const dispatch = useDispatch();
   const action = updateOverlayAction;
   const dataAction = dataActions;
@@ -29,6 +27,8 @@ const UpdateRecipeOverlay = () => {
     dispatch(action.updateClass("overlay hidden"));
   };
 
+  // For adding current values
+  const recipeData = useSelector((state) => state.recipe.recipeData);
   const className = useSelector((state) => state.updateOverlay.className);
   const recipesCollection = useSelector((state) => state.result.resultData);
 
@@ -47,8 +47,25 @@ const UpdateRecipeOverlay = () => {
   const ing5InpRef = useRef();
   const ing6InpRef = useRef();
 
+  // To prevent form from submitting
   const onFormSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const clearInputs = () => {
+    // Clearing Input data
+    titleInpRef.current.value =
+      imgInpRef.current.value =
+      servingInpRef.current.value =
+      timeInpRef.current.value =
+      instructionInpRef.current.value =
+      ing1InpRef.current.value =
+      ing2InpRef.current.value =
+      ing3InpRef.current.value =
+      ing4InpRef.current.value =
+      ing5InpRef.current.value =
+      ing6InpRef.current.value =
+        "";
   };
 
   const deleteDataHandler = async () => {
@@ -64,6 +81,8 @@ const UpdateRecipeOverlay = () => {
     const filter = {
       key: recipeData.key,
     };
+
+    // Delete request with recipe data key
     const fetchDataJson = await fetch("/v1/deleteRecipe", {
       method: "POST",
       body: JSON.stringify({
@@ -78,6 +97,7 @@ const UpdateRecipeOverlay = () => {
     if (fetchData.status === "Successful") {
       const data = await fetch("/v1/getData");
       const datas = await data.json();
+      // Feedback, Close Modal & updating datas
       toast.success("Successfully Deleted", {
         position: "top-right",
         autoClose: 1000,
@@ -92,6 +112,8 @@ const UpdateRecipeOverlay = () => {
       dispatch(recipeActions.reset());
       dispatch(action.updateClass("overlay hidden"));
     }
+    // Clearing inputs
+    clearInputs();
   };
 
   const updateDataHandler = async () => {
@@ -145,6 +167,7 @@ const UpdateRecipeOverlay = () => {
       key: recipeData.key,
     };
 
+    // Update Request
     const fetchDataJson = await fetch("/v1/updateRecipe", {
       method: "POST",
       body: JSON.stringify({
@@ -157,9 +180,11 @@ const UpdateRecipeOverlay = () => {
       },
     });
     const fetchData = await fetchDataJson.json();
+    // Evaluating result
     if (fetchData.status === "Successful") {
       const data = await fetch("/v1/getData");
       const datas = await data.json();
+      // Feedback, Close Modal & updating datas
       toast.success("Successfully Updated", {
         position: "top-right",
         autoClose: 3000,
@@ -179,9 +204,8 @@ const UpdateRecipeOverlay = () => {
       dispatch(resultAction.updateData(datas.datas));
       dispatch(action.updateClass("overlay hidden"));
     }
-
-    // Feedback Later
-    // Close Modal & clear all form inp
+    // clear all form inp
+    clearInputs();
   };
   if (!recipeData || recipeData === "loading") {
     return <></>;

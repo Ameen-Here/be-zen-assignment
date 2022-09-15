@@ -1,24 +1,22 @@
+// For Env Variables
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
+
 const express = require("express");
 const app = express();
-
 const path = require("path");
-
-const User = require("./models/user.js");
-const Recipe = require("./models/recipe.js");
 
 // Middleware
 const { isLoggedIn } = require("./middleware.js");
 
-// Export mongoose
+// Database Schema
+const User = require("./models/user.js");
+const Recipe = require("./models/recipe.js");
+
+// Export mongoose and session
 const mongoose = require("mongoose");
-
-// Export sessiom
 const session = require("express-session");
-
-const { Schema } = mongoose;
 
 // Export passport and dependencies
 const passport = require("passport");
@@ -37,7 +35,7 @@ const sessionConfig = {
   },
 };
 
-// Passport
+// Passport Initialization
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -60,19 +58,14 @@ mongoose
 
 mongoose.connection.on("error", (err) => logError(err));
 
-const port = process.env.PORT || 3001;
-
-app.use(express.static(path.join(__dirname + "/public")));
+// Other middlewares
+app.use(express.static(path.join(__dirname + "/public"))); // To join react app
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Routing
 
-app.get("/v1/getData", async (req, res) => {
-  const datas = await Recipe.find({});
-  res.send({ datas: [...datas], username: req.user?.username });
-});
-
+// Login, logout, register route
 app.post("/v1/register", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -113,25 +106,34 @@ app.get("/v1/logout", (req, res) => {
 
 // CRUD Database
 
+// Get Data
+app.get("/v1/getData", async (req, res) => {
+  const datas = await Recipe.find({});
+  res.send({ datas: [...datas], username: req.user?.username });
+});
+
 app.post("/v1/addRecipe", isLoggedIn, async (req, res) => {
   const data = req.body.sendData;
-  console.log(data);
   const newData = new Recipe(data);
 
   await newData.save();
   res.send({ status: "Successful" });
 });
 
+// Update Data
 app.post("/v1/updateRecipe", isLoggedIn, async (req, res) => {
   const { update, filter } = req.body;
   await Recipe.findOneAndUpdate(filter, update);
   res.send({ status: "Successful" });
 });
 
+// Delete Data
 app.post("/v1/deleteRecipe", isLoggedIn, async (req, res) => {
   const { filter } = req.body;
   await Recipe.findOneAndDelete(filter);
   res.send({ status: "Successful" });
 });
+
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -15,15 +15,17 @@ import "react-toastify/dist/ReactToastify.css";
 
 const AddRecipeOverlay = () => {
   const dispatch = useDispatch();
-  const action = recipeOverlayAction;
 
+  // Actions from redux
+  const action = recipeOverlayAction;
   const dataAction = dataActions;
   const resultAction = resultActions;
   const closeOverlayHandler = () => {
     dispatch(action.updateClass("overlay hidden"));
   };
-  const className = useSelector((state) => state.recipeOverlay.className);
 
+  // Publisher name and classname to control overlay
+  const className = useSelector((state) => state.recipeOverlay.className);
   const publisherName = useSelector((state) => state.currentUser.currentUser);
 
   // Handling Form Data
@@ -93,6 +95,7 @@ const AddRecipeOverlay = () => {
       instructions,
     };
 
+    // Sending add recipe data
     const fetchDataJson = await fetch("/v1/addRecipe", {
       method: "POST",
       body: JSON.stringify({
@@ -107,6 +110,7 @@ const AddRecipeOverlay = () => {
     if (fetchData.status === "Successful") {
       const data = await fetch("/v1/getData");
       const datas = await data.json();
+      // Close Modal, feedback and updating datas
       toast.success("Successfully Added", {
         position: "top-right",
         autoClose: 1000,
@@ -120,8 +124,20 @@ const AddRecipeOverlay = () => {
       dispatch(resultAction.updateData(datas.datas));
       dispatch(action.updateClass("overlay hidden"));
     }
-    // Feedback Later
-    // Close Modal & clear all form inp
+
+    // Clearing Input data
+    titleInpRef.current.value =
+      imgInpRef.current.value =
+      servingInpRef.current.value =
+      timeInpRef.current.value =
+      instructionInpRef.current.value =
+      ing1InpRef.current.value =
+      ing2InpRef.current.value =
+      ing3InpRef.current.value =
+      ing4InpRef.current.value =
+      ing5InpRef.current.value =
+      ing6InpRef.current.value =
+        "";
   };
   return (
     <div className={className}>

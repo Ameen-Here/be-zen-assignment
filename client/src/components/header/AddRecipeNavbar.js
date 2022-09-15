@@ -28,7 +28,7 @@ const AddRecipeNavbar = () => {
 
   const logoutHandler = () => {
     fetch("/v1/logout");
-    dispatch(currentUserAction.updateUser(""));
+    dispatch(userAction.updateUser(""));
   };
   return (
     <nav className="nav">

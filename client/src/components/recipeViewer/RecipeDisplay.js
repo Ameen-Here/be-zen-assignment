@@ -11,7 +11,7 @@ import { updateOverlayAction } from "../../store";
 const RecipeDisplay = (props) => {
   const publisherName = useSelector((state) => state.currentUser.currentUser);
   const dispatch = useDispatch();
-  const action = updateOverlayAction;
+  const action = updateOverlayAction; // For opening update overlay
   return (
     <div>
       <figure className="recipe__fig">
@@ -78,22 +78,6 @@ const RecipeDisplay = (props) => {
             </button>
           </>
         )}
-
-        {/* <p className="recipe__directions-text">
-          This recipe was carefully designed and tested by
-          <span className="recipe__publisher">{props.trialData.publisher}</span>
-          . Instuction will be added soon.
-        </p>
-        <a
-          className="btn--small recipe__btn"
-          href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
-          target="_blank"
-        >
-          <svg className="recipe__icon">
-            <ArrowRightAlt />
-          </svg>
-          <span>Directions</span>
-        </a> */}
       </div>
     </div>
   );

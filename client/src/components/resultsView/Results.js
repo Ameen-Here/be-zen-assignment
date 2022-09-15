@@ -21,8 +21,10 @@ const Results = () => {
               className="preview__link preview__link--active"
               href="#"
               onClick={async () => {
+                // Adding load spinner animation
                 dispatch(recipeDispatch.load());
                 setTimeout(() => {
+                  // Displaying recipe details
                   dispatch(
                     recipeDispatch.showItem({
                       key: val.key,

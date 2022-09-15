@@ -36,6 +36,7 @@ const LoginOverlay = () => {
       progress: undefined,
     });
 
+    // Log in request
     const data = await fetch("/v1/login", {
       method: "POST",
       body: JSON.stringify({
@@ -48,6 +49,8 @@ const LoginOverlay = () => {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
+
+    // Evaluating return value, is logged in confirmed or not
     if (data.status === 401) {
       toast.error("Incorrect username or password", {
         position: "top-right",
@@ -78,6 +81,7 @@ const LoginOverlay = () => {
     const username = usernameInpRef.current.value;
     const password = passwordInpRef.current.value;
 
+    // Checking password length
     if (password.length < 6) {
       toast.error("Password length is too short", {
         position: "top-right",
@@ -98,6 +102,8 @@ const LoginOverlay = () => {
         draggable: true,
         progress: undefined,
       });
+
+      // Register request
       const data = await fetch("/v1/register", {
         method: "POST",
         body: JSON.stringify({
@@ -112,6 +118,7 @@ const LoginOverlay = () => {
       });
 
       const datas = await data.json();
+      // Checking if user exist already or not.
       if (datas.error) {
         toast.error(datas.message, {
           position: "top-right",
