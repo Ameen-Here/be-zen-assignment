@@ -8,7 +8,7 @@ import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 
 const RecipeDisplay = (props) => {
   return (
-    <>
+    <div>
       <figure className="recipe__fig">
         <img src={props.trialData.img} alt="Tomato" className="recipe__img" />
         <h1 className="recipe__title">
@@ -56,11 +56,9 @@ const RecipeDisplay = (props) => {
       <div className="recipe__directions">
         <h2 className="heading--2">How to cook it</h2>
         <ol>
-          <li className="recipe__directions-text">Chop the onions</li>
-          <li className="recipe__directions-text">Boil the water</li>
-          <li className="recipe__directions-text">
-            @ minutes noodles is ready
-          </li>
+          {props.trialData.instructions.map((data) => (
+            <li className="recipe__directions-text">{data}</li>
+          ))}
         </ol>
         {/* <p className="recipe__directions-text">
           This recipe was carefully designed and tested by
@@ -78,7 +76,7 @@ const RecipeDisplay = (props) => {
           <span>Directions</span>
         </a> */}
       </div>
-    </>
+    </div>
   );
 };
 
