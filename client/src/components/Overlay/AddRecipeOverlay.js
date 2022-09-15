@@ -1,7 +1,14 @@
 import React from "react";
+
+import { v4 as uuidv4 } from "uuid";
+
+import UploadIcon from "@mui/icons-material/Upload";
+
 import { useDispatch, useSelector } from "react-redux";
 import { recipeOverlayAction } from "../../store";
 import "./AddRecipe.css";
+
+import { useRef } from "react";
 
 const AddRecipeOverlay = () => {
   const dispatch = useDispatch();
@@ -10,63 +17,140 @@ const AddRecipeOverlay = () => {
     dispatch(action.updateClass("overlay hidden"));
   };
   const className = useSelector((state) => state.recipeOverlay.className);
+
+  const publisherName = useSelector((state) => state.currentUser.currentUser);
+
+  // Handling Form Data
+
+  // Initializing ref to get form values and to reset them after submission
+  const titleInpRef = useRef();
+  const imgInpRef = useRef();
+  const servingInpRef = useRef();
+  const timeInpRef = useRef();
+  const instructionInpRef = useRef();
+  const ing1InpRef = useRef();
+  const ing2InpRef = useRef();
+  const ing3InpRef = useRef();
+  const ing4InpRef = useRef();
+  const ing5InpRef = useRef();
+  const ing6InpRef = useRef();
+
+  const onFormSubmit = (e) => {
+    e.preventDefault();
+    const title = titleInpRef.current.value;
+    const img = imgInpRef.current.value;
+    const time = timeInpRef.current.value;
+    const serving = servingInpRef.current.value;
+    // Extracting comma based string to array with no extra white space
+    const instructions = instructionInpRef.current.value
+      .split(",")
+      .map((instruction) => instruction.trim());
+
+    // Extracting instruction
+    const ing1 = ing1InpRef.current.value.split(",");
+    const ing2 = !ing2InpRef.current.value
+      ? ing2InpRef.current.value.split(",")
+      : "";
+    const ing3 = ing3InpRef.current.value
+      ? ing3InpRef.current.value.split(",")
+      : "";
+    const ing4 = ing4InpRef.current.value
+      ? ing4InpRef.current.value.split(",")
+      : "";
+    const ing5 = ing5InpRef.current.value
+      ? ing5InpRef.current.value.split(",")
+      : "";
+    const ing6 = ing6InpRef.current.value
+      ? ing6InpRef.current.value.split(",")
+      : "";
+    // Removing instruction that are blank and making it into an array of 1ty, unit, instruction object
+    const ingredients = [ing1, ing2, ing3, ing4, ing5, ing6]
+      .filter((data) => data.length === 3)
+      .map((data) => {
+        const value = { qty: data[0], unit: data[1], ingredient: data[2] };
+        return value;
+      });
+    const publisher = publisherName;
+
+    const sendData = {
+      title,
+      img,
+      time,
+      serving,
+      publisher,
+      ingredients,
+      key: uuidv4(),
+      instructions,
+    };
+
+    console.log(sendData);
+  };
   return (
     <div className={className}>
       <div className="add-recipe-window ">
         <button className="btn--close-modal" onClick={closeOverlayHandler}>
           &times;
         </button>
-        <form className="upload">
+        <form className="upload" onSubmit={onFormSubmit}>
           <div className="upload__column">
             <h3 className="upload__heading">Recipe data</h3>
             <label>Title</label>
-            <input required name="title" type="text" />
+            <input ref={titleInpRef} name="title" type="text" />
             <label>Image URL</label>
-            <input required name="image" type="text" />
+            <input ref={imgInpRef} name="image" type="text" />
 
             <label>Prep time</label>
-            <input required name="cookingTime" type="number" />
+            <input ref={timeInpRef} placeholder="In Minutes" type="number" />
             <label>Servings</label>
-            <input placeholder="In Minutes" required type="number" />
+            <input ref={servingInpRef} type="number" />
             <label>Instruction(comma seperated)</label>
-            <input required placeholder="method-1,method-2,..." type="text" />
+            <input
+              ref={instructionInpRef}
+              placeholder="Format: method-1,method-2,..."
+              type="text"
+            />
           </div>
 
           <div className="upload__column">
             <h3 className="upload__heading">Ingredients</h3>
             <label>Ingredient 1</label>
             <input
+              ref={ing1InpRef}
               type="text"
-              required
               name="ingredient-1"
               placeholder="Format: 'Quantity,Unit,Description'"
             />
             <label>Ingredient 2</label>
             <input
+              ref={ing2InpRef}
               type="text"
               name="ingredient-2"
               placeholder="Format: 'Quantity,Unit,Description'"
             />
             <label>Ingredient 3</label>
             <input
+              ref={ing3InpRef}
               type="text"
               name="ingredient-3"
               placeholder="Format: 'Quantity,Unit,Description'"
             />
             <label>Ingredient 4</label>
             <input
+              ref={ing4InpRef}
               type="text"
               name="ingredient-4"
               placeholder="Format: 'Quantity,Unit,Description'"
             />
             <label>Ingredient 5</label>
             <input
+              ref={ing5InpRef}
               type="text"
               name="ingredient-5"
               placeholder="Format: 'Quantity,Unit,Description'"
             />
             <label>Ingredient 6</label>
             <input
+              ref={ing6InpRef}
               type="text"
               name="ingredient-6"
               placeholder="Format: 'Quantity,Unit,Description'"
@@ -75,7 +159,7 @@ const AddRecipeOverlay = () => {
 
           <button className="btn upload__btn">
             <svg>
-              <use href="src/img/icons.svg#icon-upload-cloud"></use>
+              <UploadIcon />
             </svg>
             <span>Upload</span>
           </button>

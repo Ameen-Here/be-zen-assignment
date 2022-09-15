@@ -7,8 +7,10 @@ const recipeSchema = new Schema({
   img: String,
   time: Number,
   serving: Number,
+  publisher: String,
   ingredients: [Schema.Types.Mixed],
-  id: Number,
+  key: String,
+  instructions: [String],
 });
 
 module.exports = mongoose.model("Recipe", recipeSchema);

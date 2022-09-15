@@ -57,32 +57,12 @@ const port = process.env.PORT || 3001;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Demo passport route
-
-app.get("/v1/fakeLogin", async (req, res) => {
-  try {
-    const user = new User({
-      username: "armieneun12345678",
-    });
-    const newUser = await User.register(user, "fakePassword");
-    req.login(newUser, (err) => {
-      if (err) {
-        return next(err);
-      }
-      res.send({ status: "Logged In" });
-    });
-  } catch (e) {
-    res.send({ status: e.message });
-  }
-});
-
-app.get("/v1/fakeCheck", isLoggedIn, (req, res) => {
-  res.send({ status: "Logged In", userName: req.user.username });
-});
+// Routes
 
 app.get("/v1/getData", async (req, res) => {
   const datas = await Recipe.find({});
-  res.send(datas);
+  console.log({ datas: [...datas], username: req.user?.username });
+  res.send({ datas: [...datas], username: req.user?.username });
 });
 
 app.post("/v1/register", async (req, res) => {
@@ -96,11 +76,31 @@ app.post("/v1/register", async (req, res) => {
       if (err) {
         return next(err);
       }
-      res.send({ message: "Logged In", username: username });
+      res.send({ message: "Logged In", username: username, error: false });
     });
   } catch (e) {
-    res.send({ message: e.message });
+    res.send({ error: true, message: e.message });
   }
+});
+
+app.post(
+  "/v1/login",
+  passport.authenticate("local", {
+    failureMessage: true,
+  }),
+  (req, res) => {
+    res.send({ status: "logged in", username: req.user.username });
+  }
+);
+
+app.get("/v1/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.send("logged out");
+  });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
