@@ -1,6 +1,10 @@
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const express = require("express");
 const app = express();
+
+const path = require("path");
 
 const User = require("./models/user.js");
 const Recipe = require("./models/recipe.js");
@@ -20,8 +24,10 @@ const { Schema } = mongoose;
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
+const secret = process.env.SECRET || "thisisasecretkey";
+
 const sessionConfig = {
-  secret: "thisisasecretkey",
+  secret: secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
@@ -42,8 +48,10 @@ passport.deserializeUser(User.deserializeUser());
 
 // Connecting Mongoose to mongo
 
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/recipeez";
+
 mongoose
-  .connect("mongodb://localhost:27017/recipeez", {
+  .connect(dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -54,6 +62,7 @@ mongoose.connection.on("error", (err) => logError(err));
 
 const port = process.env.PORT || 3001;
 
+app.use(express.static(path.join(__dirname + "/public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

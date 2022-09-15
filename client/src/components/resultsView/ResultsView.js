@@ -7,7 +7,7 @@ const ResultsView = () => {
   return (
     <div className="search-results">
       <Results />
-      <Pagination />
+      {/* <Pagination /> */}
     </div>
   );
 };

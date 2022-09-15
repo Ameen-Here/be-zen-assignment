@@ -26,6 +26,15 @@ const LoginOverlay = () => {
   const loginHandler = async () => {
     const username = usernameInpRef.current.value;
     const password = passwordInpRef.current.value;
+    toast.success("Logging In", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
 
     const data = await fetch("/v1/login", {
       method: "POST",
@@ -69,24 +78,10 @@ const LoginOverlay = () => {
     const username = usernameInpRef.current.value;
     const password = passwordInpRef.current.value;
 
-    const data = await fetch("/v1/register", {
-      method: "POST",
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-
-      // Adding headers to the request
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    });
-
-    const datas = await data.json();
-    if (datas.error) {
-      toast.error(datas.message, {
+    if (password.length < 6) {
+      toast.error("Password length is too short", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -94,17 +89,52 @@ const LoginOverlay = () => {
         progress: undefined,
       });
     } else {
-      toast.success(datas.message, {
+      toast.success("signing up", {
         position: "top-right",
-        autoClose: 4000,
+        autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
       });
-      dispatch(userAction.updateUser(datas.username));
-      dispatch(action.updateClass("overlay hidden"));
+      const data = await fetch("/v1/register", {
+        method: "POST",
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+
+        // Adding headers to the request
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+
+      const datas = await data.json();
+      if (datas.error) {
+        toast.error(datas.message, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        toast.success(datas.message, {
+          position: "top-right",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        dispatch(userAction.updateUser(datas.username));
+        dispatch(action.updateClass("overlay hidden"));
+      }
     }
   };
 
@@ -132,7 +162,7 @@ const LoginOverlay = () => {
                 name="username"
                 type="text"
               />
-              <label>Password</label>
+              <label>Password(5+ character)</label>
               <input
                 ref={passwordInpRef}
                 required
