@@ -61,7 +61,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.get("/v1/getData", async (req, res) => {
   const datas = await Recipe.find({});
-  console.log({ datas: [...datas], username: req.user?.username });
   res.send({ datas: [...datas], username: req.user?.username });
 });
 
@@ -101,6 +100,17 @@ app.get("/v1/logout", (req, res) => {
 
     res.send("logged out");
   });
+});
+
+// CRUD Database
+
+app.post("/v1/addRecipe", isLoggedIn, async (req, res) => {
+  const data = req.body.sendData;
+  console.log(data);
+  const newData = new Recipe(data);
+
+  await newData.save();
+  res.send({ status: "Successful" });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -35,7 +35,7 @@ const AddRecipeOverlay = () => {
   const ing5InpRef = useRef();
   const ing6InpRef = useRef();
 
-  const onFormSubmit = (e) => {
+  const onFormSubmit = async (e) => {
     e.preventDefault();
     const title = titleInpRef.current.value;
     const img = imgInpRef.current.value;
@@ -47,22 +47,16 @@ const AddRecipeOverlay = () => {
       .map((instruction) => instruction.trim());
 
     // Extracting instruction
+    const extractIngValue = (ingVal) => {
+      return ingVal.current.value ? ingVal.current.value.split(",") : "";
+    };
+
     const ing1 = ing1InpRef.current.value.split(",");
-    const ing2 = !ing2InpRef.current.value
-      ? ing2InpRef.current.value.split(",")
-      : "";
-    const ing3 = ing3InpRef.current.value
-      ? ing3InpRef.current.value.split(",")
-      : "";
-    const ing4 = ing4InpRef.current.value
-      ? ing4InpRef.current.value.split(",")
-      : "";
-    const ing5 = ing5InpRef.current.value
-      ? ing5InpRef.current.value.split(",")
-      : "";
-    const ing6 = ing6InpRef.current.value
-      ? ing6InpRef.current.value.split(",")
-      : "";
+    const ing2 = extractIngValue(ing2InpRef);
+    const ing3 = extractIngValue(ing3InpRef);
+    const ing4 = extractIngValue(ing4InpRef);
+    const ing5 = extractIngValue(ing5InpRef);
+    const ing6 = extractIngValue(ing6InpRef);
     // Removing instruction that are blank and making it into an array of 1ty, unit, instruction object
     const ingredients = [ing1, ing2, ing3, ing4, ing5, ing6]
       .filter((data) => data.length === 3)
@@ -70,6 +64,7 @@ const AddRecipeOverlay = () => {
         const value = { qty: data[0], unit: data[1], ingredient: data[2] };
         return value;
       });
+
     const publisher = publisherName;
 
     const sendData = {
@@ -83,7 +78,20 @@ const AddRecipeOverlay = () => {
       instructions,
     };
 
-    console.log(sendData);
+    const fetchDataJson = await fetch("/v1/addRecipe", {
+      method: "POST",
+      body: JSON.stringify({
+        sendData,
+      }),
+
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    const fetchData = await fetchDataJson.json();
+    console.log(fetchData);
+    // Feedback Later
+    // Close Modal & clear all form inp
   };
   return (
     <div className={className}>
