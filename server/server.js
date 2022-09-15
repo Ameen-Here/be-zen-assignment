@@ -113,4 +113,10 @@ app.post("/v1/addRecipe", isLoggedIn, async (req, res) => {
   res.send({ status: "Successful" });
 });
 
+app.post("/v1/updateRecipe", isLoggedIn, async (req, res) => {
+  const { update, filter } = req.body;
+  await Recipe.findOneAndUpdate(filter, update);
+  res.send({ status: "Successful" });
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

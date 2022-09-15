@@ -5,10 +5,13 @@ import PeopleIcon from "@mui/icons-material/People";
 import CheckIcon from "@mui/icons-material/Check";
 import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateOverlayAction } from "../../store";
 
 const RecipeDisplay = (props) => {
   const publisherName = useSelector((state) => state.currentUser.currentUser);
+  const dispatch = useDispatch();
+  const action = updateOverlayAction;
   return (
     <div>
       <figure className="recipe__fig">
@@ -64,7 +67,10 @@ const RecipeDisplay = (props) => {
         {props.trialData.publisher === publisherName && (
           <>
             <br />
-            <button className="btn upload__btn">
+            <button
+              onClick={() => dispatch(action.updateClass("overlay"))}
+              className="btn upload__btn"
+            >
               <svg className="recipe__icon">
                 <ArrowRightAlt />
               </svg>
