@@ -5,14 +5,20 @@ import { v4 as uuidv4 } from "uuid";
 import UploadIcon from "@mui/icons-material/Upload";
 
 import { useDispatch, useSelector } from "react-redux";
-import { recipeOverlayAction } from "../../store";
+import { dataActions, recipeOverlayAction, resultActions } from "../../store";
 import "./AddRecipe.css";
 
 import { useRef } from "react";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const AddRecipeOverlay = () => {
   const dispatch = useDispatch();
   const action = recipeOverlayAction;
+
+  const dataAction = dataActions;
+  const resultAction = resultActions;
   const closeOverlayHandler = () => {
     dispatch(action.updateClass("overlay hidden"));
   };
@@ -37,6 +43,15 @@ const AddRecipeOverlay = () => {
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
+    toast.success("Updating", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     const title = titleInpRef.current.value;
     const img = imgInpRef.current.value;
     const time = timeInpRef.current.value;
@@ -89,12 +104,28 @@ const AddRecipeOverlay = () => {
       },
     });
     const fetchData = await fetchDataJson.json();
-    console.log(fetchData);
+    if (fetchData.status === "Successful") {
+      const data = await fetch("/v1/getData");
+      const datas = await data.json();
+      toast.success("Successfully Added", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(dataAction.addValue(datas.datas));
+      dispatch(resultAction.updateData(datas.datas));
+      dispatch(action.updateClass("overlay hidden"));
+    }
     // Feedback Later
     // Close Modal & clear all form inp
   };
   return (
     <div className={className}>
+      <ToastContainer />
       <div className="add-recipe-window ">
         <button className="btn--close-modal" onClick={closeOverlayHandler}>
           &times;
@@ -103,16 +134,22 @@ const AddRecipeOverlay = () => {
           <div className="upload__column">
             <h3 className="upload__heading">Recipe data</h3>
             <label>Title</label>
-            <input ref={titleInpRef} name="title" type="text" />
+            <input required ref={titleInpRef} name="title" type="text" />
             <label>Image URL</label>
-            <input ref={imgInpRef} name="image" type="text" />
+            <input required ref={imgInpRef} name="image" type="text" />
 
             <label>Prep time</label>
-            <input ref={timeInpRef} placeholder="In Minutes" type="number" />
+            <input
+              required
+              ref={timeInpRef}
+              placeholder="In Minutes"
+              type="number"
+            />
             <label>Servings</label>
-            <input ref={servingInpRef} type="number" />
+            <input required ref={servingInpRef} type="number" />
             <label>Instruction(comma seperated)</label>
             <input
+              required
               ref={instructionInpRef}
               placeholder="Format: method-1,method-2,..."
               type="text"
@@ -123,6 +160,7 @@ const AddRecipeOverlay = () => {
             <h3 className="upload__heading">Ingredients</h3>
             <label>Ingredient 1</label>
             <input
+              required
               ref={ing1InpRef}
               type="text"
               name="ingredient-1"

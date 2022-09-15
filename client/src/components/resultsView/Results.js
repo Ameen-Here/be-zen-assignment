@@ -24,7 +24,10 @@ const Results = () => {
                 dispatch(recipeDispatch.load());
                 setTimeout(() => {
                   dispatch(
-                    recipeDispatch.showItem({ id: val.id, datas: recipeDatas })
+                    recipeDispatch.showItem({
+                      key: val.key,
+                      datas: recipeDatas,
+                    })
                   );
                 }, 500);
               }}

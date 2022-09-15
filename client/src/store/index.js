@@ -26,7 +26,7 @@ const addRecipeOverlaySlice = createSlice({
 });
 
 const updateOverlaySlice = createSlice({
-  name: "recipeOverlay",
+  name: "updateOverlay",
   initialState: { className: "overlay hidden" },
   reducers: {
     updateClass(state, action) {
@@ -84,12 +84,15 @@ const recipeSlice = createSlice({
   name: "recipe",
   initialState: { recipeData: "" },
   reducers: {
+    reset(state) {
+      state.recipeData = "";
+    },
     load(state) {
       state.recipeData = "loading";
     },
     showItem(state, action) {
       state.recipeData = action.payload.datas.find(
-        (data) => data.id === action.payload.id
+        (data) => data.key === action.payload.key
       );
     },
   },

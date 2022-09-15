@@ -3,10 +3,18 @@ import React from "react";
 import UpdateIcon from "@mui/icons-material/Update";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import { useRef } from "react";
-import { updateOverlayAction } from "../../store";
+import {
+  dataActions,
+  recipeAction,
+  resultActions,
+  updateOverlayAction,
+} from "../../store";
 
 const UpdateRecipeOverlay = () => {
   // For adding current values
@@ -14,10 +22,15 @@ const UpdateRecipeOverlay = () => {
 
   const dispatch = useDispatch();
   const action = updateOverlayAction;
+  const dataAction = dataActions;
+  const resultAction = resultActions;
+  const recipeActions = recipeAction;
   const closeOverlayHandler = () => {
     dispatch(action.updateClass("overlay hidden"));
   };
+
   const className = useSelector((state) => state.updateOverlay.className);
+  const recipesCollection = useSelector((state) => state.result.resultData);
 
   // Handling Form Data
 
@@ -39,6 +52,15 @@ const UpdateRecipeOverlay = () => {
   };
 
   const deleteDataHandler = async () => {
+    toast.success("Deleting", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     const filter = {
       key: recipeData.key,
     };
@@ -53,10 +75,35 @@ const UpdateRecipeOverlay = () => {
       },
     });
     const fetchData = await fetchDataJson.json();
-    console.log(fetchData);
+    if (fetchData.status === "Successful") {
+      const data = await fetch("/v1/getData");
+      const datas = await data.json();
+      toast.success("Successfully Deleted", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(dataAction.addValue(datas.datas));
+      dispatch(resultAction.updateData(datas.datas));
+      dispatch(recipeActions.reset());
+      dispatch(action.updateClass("overlay hidden"));
+    }
   };
 
   const updateDataHandler = async () => {
+    toast.success("Updating", {
+      position: "top-right",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     const title = titleInpRef.current.value;
     const img = imgInpRef.current.value;
     const time = timeInpRef.current.value;
@@ -110,7 +157,29 @@ const UpdateRecipeOverlay = () => {
       },
     });
     const fetchData = await fetchDataJson.json();
-    console.log(fetchData);
+    if (fetchData.status === "Successful") {
+      const data = await fetch("/v1/getData");
+      const datas = await data.json();
+      toast.success("Successfully Updated", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(
+        recipeActions.showItem({
+          datas: recipesCollection,
+          key: recipeData.key,
+        })
+      );
+      dispatch(dataAction.addValue(datas.datas));
+      dispatch(resultAction.updateData(datas.datas));
+      dispatch(action.updateClass("overlay hidden"));
+    }
+
     // Feedback Later
     // Close Modal & clear all form inp
   };
@@ -119,6 +188,7 @@ const UpdateRecipeOverlay = () => {
   } else
     return (
       <div className={className}>
+        <ToastContainer />
         <div className="add-recipe-window ">
           <button className="btn--close-modal" onClick={closeOverlayHandler}>
             &times;
@@ -138,7 +208,7 @@ const UpdateRecipeOverlay = () => {
                 ref={imgInpRef}
                 name="image"
                 type="text"
-                value={recipeData.title}
+                defaultValue={recipeData.img}
               />
 
               <label>Prep time</label>
@@ -146,7 +216,7 @@ const UpdateRecipeOverlay = () => {
                 ref={timeInpRef}
                 placeholder="In Minutes"
                 type="number"
-                value={recipeData.time}
+                defaultValue={recipeData.time}
               />
               <label>Servings</label>
               <input
@@ -159,7 +229,7 @@ const UpdateRecipeOverlay = () => {
                 ref={instructionInpRef}
                 placeholder="Format: method-1,method-2,..."
                 type="text"
-                value={recipeData.instructions}
+                defaultValue={recipeData.instructions}
               />
             </div>
 
@@ -171,7 +241,7 @@ const UpdateRecipeOverlay = () => {
                 type="text"
                 name="ingredient-1"
                 placeholder="Format: 'Quantity,Unit,Description'"
-                value={
+                defaultValue={
                   typeof recipeData.ingredients[0] !== "undefined" &&
                   `${recipeData.ingredients[0].qty},${recipeData.ingredients[0].unit},${recipeData.ingredients[0].ingredient}`
                 }
@@ -182,7 +252,7 @@ const UpdateRecipeOverlay = () => {
                 type="text"
                 name="ingredient-2"
                 placeholder="Format: 'Quantity,Unit,Description'"
-                value={
+                defaultValue={
                   typeof recipeData.ingredients[1] !== "undefined"
                     ? `${recipeData.ingredients[1].qty},${recipeData.ingredients[1].unit},${recipeData.ingredients[1].ingredient}`
                     : ""
@@ -194,7 +264,7 @@ const UpdateRecipeOverlay = () => {
                 type="text"
                 name="ingredient-3"
                 placeholder="Format: 'Quantity,Unit,Description'"
-                value={
+                defaultValue={
                   typeof recipeData.ingredients[2] !== "undefined"
                     ? `${recipeData.ingredients[2].qty},${recipeData.ingredients[2].unit},${recipeData.ingredients[2].ingredient}`
                     : ""
@@ -206,7 +276,7 @@ const UpdateRecipeOverlay = () => {
                 type="text"
                 name="ingredient-4"
                 placeholder="Format: 'Quantity,Unit,Description'"
-                value={
+                defaultValue={
                   typeof recipeData.ingredients[3] !== "undefined"
                     ? `${recipeData.ingredients[3].qty},${recipeData.ingredients[3].unit},${recipeData.ingredients[3].ingredient}`
                     : ""
@@ -218,7 +288,7 @@ const UpdateRecipeOverlay = () => {
                 type="text"
                 name="ingredient-5"
                 placeholder="Format: 'Quantity,Unit,Description'"
-                value={
+                defaultValue={
                   typeof recipeData.ingredients[4] !== "undefined"
                     ? `${recipeData.ingredients[4].qty},${recipeData.ingredients[4].unit},${recipeData.ingredients[4].ingredient}""`
                     : ""
@@ -230,7 +300,7 @@ const UpdateRecipeOverlay = () => {
                 type="text"
                 name="ingredient-6"
                 placeholder="Format: 'Quantity,Unit,Description'"
-                value={
+                defaultValue={
                   typeof recipeData.ingredients[5] !== "undefined"
                     ? `${recipeData.ingredients[5].qty},${recipeData.ingredients[5].unit},${recipeData.ingredients[5].ingredient}`
                     : ""
