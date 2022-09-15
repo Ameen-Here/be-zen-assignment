@@ -3,10 +3,12 @@ import React from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import PeopleIcon from "@mui/icons-material/People";
 import CheckIcon from "@mui/icons-material/Check";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 import ArrowRightAlt from "@mui/icons-material/ArrowRightAlt";
 
+import { useSelector } from "react-redux";
+
 const RecipeDisplay = (props) => {
+  const publisherName = useSelector((state) => state.currentUser.currentUser);
   return (
     <div>
       <figure className="recipe__fig">
@@ -34,8 +36,7 @@ const RecipeDisplay = (props) => {
           </span>
           <span className="recipe__info-text">servings</span>
         </div>
-      </div>{" "}
-      *
+      </div>
       <div className="recipe__ingredients">
         <h2 className="heading--2">Recipe ingredients</h2>
         <ul className="recipe__ingredient-list">
@@ -60,6 +61,18 @@ const RecipeDisplay = (props) => {
             <li className="recipe__directions-text">{data}</li>
           ))}
         </ol>
+        {props.trialData.publisher === publisherName && (
+          <>
+            <br />
+            <button className="btn upload__btn">
+              <svg className="recipe__icon">
+                <ArrowRightAlt />
+              </svg>
+              <span>Update</span>
+            </button>
+          </>
+        )}
+
         {/* <p className="recipe__directions-text">
           This recipe was carefully designed and tested by
           <span className="recipe__publisher">{props.trialData.publisher}</span>
