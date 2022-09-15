@@ -1,6 +1,7 @@
 import React from "react";
 
-import UploadIcon from "@mui/icons-material/Upload";
+import UpdateIcon from "@mui/icons-material/Update";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,8 +34,29 @@ const UpdateRecipeOverlay = () => {
   const ing5InpRef = useRef();
   const ing6InpRef = useRef();
 
-  const onFormSubmit = async (e) => {
+  const onFormSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const deleteDataHandler = async () => {
+    const filter = {
+      key: recipeData.key,
+    };
+    const fetchDataJson = await fetch("/v1/deleteRecipe", {
+      method: "POST",
+      body: JSON.stringify({
+        filter,
+      }),
+
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    });
+    const fetchData = await fetchDataJson.json();
+    console.log(fetchData);
+  };
+
+  const updateDataHandler = async () => {
     const title = titleInpRef.current.value;
     const img = imgInpRef.current.value;
     const time = timeInpRef.current.value;
@@ -216,11 +238,17 @@ const UpdateRecipeOverlay = () => {
               />
             </div>
 
-            <button className="btn upload__btn">
+            <button className="btn upload__btn" onClick={updateDataHandler}>
               <svg>
-                <UploadIcon />
+                <UpdateIcon />
               </svg>
-              <span>Upload</span>
+              <span> Update</span>
+            </button>
+            <button className="btn upload__btn" onClick={deleteDataHandler}>
+              <svg>
+                <DeleteIcon />
+              </svg>
+              <span> Delete</span>
             </button>
           </form>
         </div>

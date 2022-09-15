@@ -119,4 +119,10 @@ app.post("/v1/updateRecipe", isLoggedIn, async (req, res) => {
   res.send({ status: "Successful" });
 });
 
+app.post("/v1/deleteRecipe", isLoggedIn, async (req, res) => {
+  const { filter } = req.body;
+  await Recipe.findOneAndDelete(filter);
+  res.send({ status: "Successful" });
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
