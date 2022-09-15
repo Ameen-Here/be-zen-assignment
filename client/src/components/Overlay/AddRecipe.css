@@ -98,4 +98,39 @@
   justify-self: center;
 }
 
-/* Breakpoints */
+/* ===================  BREAKPOINTS =================== */
+
+/* For large devices */
+@media screen and (max-width: 850px) {
+  .add-recipe-window {
+    width: 70rem;
+  }
+  .upload__column input {
+    width: 150px;
+  }
+}
+
+/* For medium devices */
+
+@media screen and (max-width: 576px) {
+  .add-recipe-window {
+    width: 35rem;
+  }
+  .upload {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
+  .upload__column input {
+    width: 150px;
+  }
+  .upload__column {
+    gap: 0rem;
+  }
+  .btn--close-modal {
+    top: 1.5rem;
+  }
+  .upload__column button {
+    display: inline;
+    margin-top: 0.3rem;
+  }
+}

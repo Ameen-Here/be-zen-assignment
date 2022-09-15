@@ -182,5 +182,19 @@
   }
 }
 
-.search__icon {
+/* ===================  BREAKPOINTS =================== */
+
+/* For large devices */
+@media screen and (max-width: 850px) {
+}
+
+/* For medium devices */
+
+@media screen and (max-width: 576px) {
+  .recipe {
+    width: 350px;
+  }
+  .recipe__details {
+    flex-wrap: wrap;
+  }
 }

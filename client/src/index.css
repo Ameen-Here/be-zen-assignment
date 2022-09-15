@@ -312,3 +312,29 @@ body {
   line-height: 1.5;
   font-weight: 600;
 }
+
+/* ===================  BREAKPOINTS =================== */
+
+/* For large devices */
+@media screen and (max-width: 850px) {
+  .container {
+    width: 800px;
+  }
+}
+
+/* For medium devices */
+
+@media screen and (max-width: 576px) {
+  .container {
+    width: 360px;
+    margin-left: 10px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "head"
+      "list"
+      "recipe";
+  }
+  .btn {
+    padding: 7px;
+  }
+}

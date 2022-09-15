@@ -15,3 +15,20 @@
   display: block;
   font-size: 30px;
 }
+
+/* ===================  BREAKPOINTS =================== */
+
+/* For large devices */
+@media screen and (max-width: 850px) {
+}
+
+/* For medium devices */
+
+@media screen and (max-width: 576px) {
+  .header {
+    width: 500px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    row-gap: 1rem;
+  }
+}
